@@ -34,7 +34,7 @@ def configure(subject=None):
     subject = subject or ctx
 
     ctx.logger.info('Configuring HAProxy.')
-    template = Template(ctx.get_resource(TEMPLATE_RESOURCE_NAME))
+    template = Template(ctx.get_resource(TEMPLATE_RESOURCE_NAME).decode('utf-8'))
 
     ctx.logger.debug('Building a dict object that will contain variables '
                      'to write to the Jinja2 template.')
@@ -48,7 +48,7 @@ def configure(subject=None):
     ctx.logger.debug('The config dict: {0}.'.format(config))
 
     with tempfile.NamedTemporaryFile(delete=False) as temp_config:
-        temp_config.write(template.render(config))
+        temp_config.write(template.render(config).encode('utf-8'))
 
     _run('sudo /usr/sbin/haproxy -f {0} -c'.format(temp_config.name),
          error_message='Failed to Configure')
