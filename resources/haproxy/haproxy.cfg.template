@@ -16,11 +16,12 @@ frontend {{frontend_id}}
 
 backend {{default_backend}}
         option forceclose
-{% for id, backend in backends.iteritems() %}
+{% for id, backend in backends.items() %}
     server {{ id }} {{ backend.address }}:{{ backend.port }} maxconn {{ backend.maxconn }}
 {% endfor %}
 
-listen stats 0.0.0.0:{{statistics_port}}
+listen stats
+    bind 0.0.0.0:{{statistics_port}}
     mode http
     balance
     timeout client 5000
